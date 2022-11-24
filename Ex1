@@ -1,0 +1,79 @@
+import math
+
+
+class Rational:
+
+    def __init__(self, nominator, denominator):
+        if not isinstance(nominator, int):
+            raise Exception("Error: Numerator must be integer")
+        elif not isinstance(denominator, int):
+            raise Exception("Error: Denominator must be integer")
+        elif denominator == 0:
+            raise Exception("Error: Denominator can not be 0")
+        self.nominator = nominator
+        self.denominator = denominator
+
+    def reduce_form(self):
+        tmp = math.gcd(self.nominator, self.denominator)
+        self.nominator = self.nominator // tmp
+        self.denominator = self.denominator // tmp
+        return f'The reduced form of fraction is {self.nominator}/{self.denominator}'
+
+    def __str__(self):
+        return f'The rational result of fraction a/b is {(self.nominator / self.denominator)}'
+
+    def find_lcd(self, num1, num2):
+        lcd = max(num1, num2)
+        while not(lcd % num1 == 0 and lcd % num2 == 0):
+            lcd += 1
+        return lcd
+
+    def __add__(self, other):
+        if not isinstance(other, Rational):
+            raise Exception("Error: Other must be Rational type")
+        else:
+            lcd = self.find_lcd(self.denominator, other.denominator)
+            nominator1 = int(self.nominator * lcd / self.denominator)
+            nominator2 = int(other.nominator * lcd / other.denominator)
+            return Rational(nominator1 + nominator2, lcd)
+
+    def __sub__(self, other):
+        if not isinstance(other, Rational):
+            raise Exception("other must be of type Rational")
+        else:
+            lcd = self.find_lcd(self.denominator, other.denominator)
+            nominator1 = int(self.nominator * lcd / self.denominator)
+            nominator2 = int(other.nominator * lcd / other.denominator)
+            return Rational(nominator1 - nominator2, lcd)
+
+    def __mul__(self, other):
+        if not isinstance(other, Rational):
+            raise Exception("Error: Other must be Rational type")
+        else:
+            return Rational(self.nominator * other.nominator, self.denominator * other.denominator)
+
+    def __truediv__(self, other):
+        if not isinstance(other, Rational):
+            raise Exception("Error: Other must be Rational type")
+        else:
+            return Rational(self.nominator * other.denominator, self.denominator * other.nominator)
+
+    def __eq__(self, other):
+        if not isinstance(other, Rational):
+            raise Exception("Error: Other must be Rational type")
+        else:
+            return self.nominator == other.nominator and self.denominator == other.denominator
+
+
+fraction = Rational(10, 100)
+fraction1 = Rational(20, 100)
+print(fraction.reduce_form())
+print(fraction1.reduce_form())
+fraction += fraction1
+print(fraction)
+fraction -= fraction1
+print(fraction)
+fraction *= fraction1
+print(fraction)
+fraction /= fraction1
+print(fraction)
